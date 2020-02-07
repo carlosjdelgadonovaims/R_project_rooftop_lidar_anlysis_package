@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Carlos Delgado" />
+
+
+<title>RooftopsHubAnalysisLidar: A great package for the rooftop shape assessment of the buildings with the aim of establishing suitable hubs locations for air-taxis</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore"><em>RooftopsHubAnalysisLidar</em>: A great package for the rooftop shape assessment of the buildings with the aim of establishing suitable hubs locations for air-taxis</h1>
+<h4 class="author">Carlos Delgado</h4>
+<h4 class="date">9 of August 2019</h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><strong>RooftopsHubsAnalysisLidar</strong> is a package implemented in R that seeks to support the location of potential hubs (Vertihubs, Vertistops, Vertiports) for air-taxis in New York City. Subsequently, the package has two approaches. The first is designed to find out the available areas in the city to establish the hubs of these aircrafts with eVTOL technology. The second approach leads to the location with high precision of the roofs of the buildings with the greatest potential to develop this type of structures by considering the shape of the rooftop. Thus, the first approach uses different sources of information for New York City. These sources are Parks (Reserve areas), Educational centers (Schools, Universities), Hospitals, Embassies, Graveyards, Airports (Flightpaths) and finally the noise map (air-traffic and road-traffic noise). All these spatial entities have been previously considered in concepts of several space agencies such as <strong>ESA</strong>, <strong>NASA</strong> and <strong>Federal Aviation Administration (FAA)</strong>. They have also been the subject of research for other projects such as the analysis of Least Cost Networks for this type of vehicles <em>(Hildemann and Delgado, 2019)</em>. Nevertheless, this tool offers the advantage that it also calculates the average noise level for each of the roofs in an available area. On the other hand, the second approach seeks greater accuracy of the potential roofs of buildings that are in suitable areas evaluating the shape of the rooftops. To carry out this function, Lidar files with point clouds and the rooftops print as shapefile files are used as the main source. In this order of ideas, the functions offered by this package lead to the development of high-level research projects. Some of them, such as the 3D suitability analysis for the location of hubs for air taxis by considering machine learning approaches and the optimization of least cost networks through genetic algorithms.</p>
+</div>
+<div id="data-description" class="section level2">
+<h2>Data description</h2>
+<p>The data implemented which will restrict the areas where aircraft can fly mostly are from Open Street Maps and New York Open Data. These data are provided in shapefile format. In contrast, the noise map, although not considered restrictive, plays a very important role in decision making. This is because the ideal location of the Hubs should be in areas that have a moderate noise. Meaning the noise should not exceeding 55 db according to the <strong>US Enviromental Protection Agency (EPA)</strong>. This noise map is taken from the US Department Transportation and is downloaded in .tif format. On the other hand, to perform the detailed analysis of the rooftop shapes, we are using the information of rooftops prints and the Lidar point cloud files from New York Open Data. The latter due to they are data with a high level of detail occupy a large physical space on disk and therefore its processing time is a function of the memory of the machine where the functions are run.</p>
+</div>
+<div id="calculating-the-air-traffic-and-road-traffic-noise-of-potential-rooftops-within-available-areas." class="section level2">
+<h2>Calculating the Air-Traffic and Road-Traffic Noise of potential rooftops within available areas.</h2>
+<p>This first analysis has several stages. The first stage consists in the calculation of the restricted area. At this stage the algorithm takes the information from the shapefiles of parks, hospitals, schools, cemeteries, flightpaths, embassies and performs a spatial buffer according to certain distances taken from previously reviewed concepts. Once the shapefiles are projected and transformed when necessary, we proceed to make a union of them. Then, the algorithm performs a dissolve to generate a unique geometry of the restriction zones. These are then the input to perform a within (negative) operation with the New York buildings. For the example below, only one sample is taken due to the large volume of roofs in New York. Having this result, the roofs that are in the available areas are overlapped with the noise map. In other words they are performing a raster extraction of the air-traffic and road-traffic noise. Finally, a table with all the statistics of each of the roofs is consolidated.</p>
+<p>Because the plots are being generated using the lidR library, they will appear as pop-up windows</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(RooftopsHubsAnalyisisLidar)
+
+
+p_s_u &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/final_schools_uni_man.shp&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RooftopsHubsAnalyisisLidar&quot;</span>)
+p_g_e &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/final_graveyard_embassy_man.shp&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RooftopsHubsAnalyisisLidar&quot;</span>)
+p_h &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/final_hospitals_man.shp&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RooftopsHubsAnalyisisLidar&quot;</span>)
+p_p_r &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/final_park_reserve_man.shp&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RooftopsHubsAnalyisisLidar&quot;</span>)
+p_f_p &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/final_flightpaths_man.shp&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RooftopsHubsAnalyisisLidar&quot;</span>)
+p_b_n &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/boundaries_manhattan.shp&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RooftopsHubsAnalyisisLidar&quot;</span>)
+b_man &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/sample_buildings_manhattan.shp&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RooftopsHubsAnalyisisLidar&quot;</span>)
+n_m_r &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/noise_m.tif&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RooftopsHubsAnalyisisLidar&quot;</span>)
+
+new_statis &lt;-<span class="st"> </span><span class="kw">availableAreaHubs_noiseAnalysis</span>(p_s_u, p_g_e, p_h, p_p_r, p_f_p, p_b_n, b_man, n_m_r)</code></pre></div>
+<pre><code>## Reading layer `final_schools_uni_man' from data source `C:\tmp\Rtmp42tSdU\temp_libpath28e864bb7ea2\RooftopsHubsAnalyisisLidar\extdata\final_schools_uni_man.shp' using driver `ESRI Shapefile'
+## Simple feature collection with 120 features and 13 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 298940.3 ymin: 60154.3 xmax: 307592 ymax: 79241.89
+## epsg (SRID):    NA
+## proj4string:    +proj=lcc +lat_1=40.66666666666666 +lat_2=41.03333333333333 +lat_0=40.16666666666666 +lon_0=-74 +x_0=300000 +y_0=0 +datum=NAD83 +units=m +no_defs
+## Reading layer `final_graveyard_embassy_man' from data source `C:\tmp\Rtmp42tSdU\temp_libpath28e864bb7ea2\RooftopsHubsAnalyisisLidar\extdata\final_graveyard_embassy_man.shp' using driver `ESRI Shapefile'
+## Simple feature collection with 56 features and 12 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 298921.2 ymin: 60064.97 xmax: 304789 ymax: 74107.02
+## epsg (SRID):    NA
+## proj4string:    +proj=lcc +lat_1=40.66666666666666 +lat_2=41.03333333333333 +lat_0=40.16666666666666 +lon_0=-74 +x_0=300000 +y_0=0 +datum=NAD83 +units=m +no_defs
+## Reading layer `final_hospitals_man' from data source `C:\tmp\Rtmp42tSdU\temp_libpath28e864bb7ea2\RooftopsHubsAnalyisisLidar\extdata\final_hospitals_man.shp' using driver `ESRI Shapefile'
+## Simple feature collection with 34 features and 12 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 299535.2 ymin: 60312.22 xmax: 307411.5 ymax: 78523.85
+## epsg (SRID):    NA
+## proj4string:    +proj=lcc +lat_1=40.66666666666666 +lat_2=41.03333333333333 +lat_0=40.16666666666666 +lon_0=-74 +x_0=300000 +y_0=0 +datum=NAD83 +units=m +no_defs
+## Reading layer `final_park_reserve_man' from data source `C:\tmp\Rtmp42tSdU\temp_libpath28e864bb7ea2\RooftopsHubsAnalyisisLidar\extdata\final_park_reserve_man.shp' using driver `ESRI Shapefile'
+## Simple feature collection with 171 features and 12 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 296308.4 ymin: 57441.36 xmax: 307800.2 ymax: 79003.4
+## epsg (SRID):    NA
+## proj4string:    +proj=lcc +lat_1=40.66666666666666 +lat_2=41.03333333333333 +lat_0=40.16666666666666 +lon_0=-74 +x_0=300000 +y_0=0 +datum=NAD83 +units=m +no_defs
+## Reading layer `final_flightpaths_man' from data source `C:\tmp\Rtmp42tSdU\temp_libpath28e864bb7ea2\RooftopsHubsAnalyisisLidar\extdata\final_flightpaths_man.shp' using driver `ESRI Shapefile'
+## Simple feature collection with 1 feature and 12 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XYZ
+## bbox:           xmin: 303043.7 ymin: 68357.47 xmax: 307276.3 ymax: 73522.9
+## epsg (SRID):    NA
+## proj4string:    +proj=lcc +lat_1=40.66666666666666 +lat_2=41.03333333333333 +lat_0=40.16666666666666 +lon_0=-74 +x_0=300000 +y_0=0 +datum=NAD83 +units=m +no_defs
+## Reading layer `boundaries_manhattan' from data source `C:\tmp\Rtmp42tSdU\temp_libpath28e864bb7ea2\RooftopsHubsAnalyisisLidar\extdata\boundaries_manhattan.shp' using driver `ESRI Shapefile'
+## Simple feature collection with 1 feature and 3 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 295965.5 ymin: 57327.61 xmax: 307868.6 ymax: 79110.32
+## epsg (SRID):    NA
+## proj4string:    +proj=lcc +lat_1=40.66666666666666 +lat_2=41.03333333333333 +lat_0=40.16666666666666 +lon_0=-74 +x_0=300000 +y_0=0 +datum=NAD83 +units=m +no_defs
+## Reading layer `sample_buildings_manhattan' from data source `C:\tmp\Rtmp42tSdU\temp_libpath28e864bb7ea2\RooftopsHubsAnalyisisLidar\extdata\sample_buildings_manhattan.shp' using driver `ESRI Shapefile'
+## Simple feature collection with 101 features and 14 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 298406.5 ymin: 57773.81 xmax: 303995.9 ymax: 66987.43
+## epsg (SRID):    NA
+## proj4string:    +proj=lcc +lat_1=40.66666666666666 +lat_2=41.03333333333333 +lat_0=40.16666666666666 +lon_0=-74 +x_0=300000 +y_0=0 +datum=NAD83 +units=m +no_defs</code></pre>
+<pre><code>## Warning: attribute variables are assumed to be spatially constant
+## throughout all geometries</code></pre>
+<pre><code>## [1] &quot;Dissolving...&quot;</code></pre>
+<pre><code>## Warning: attribute variables are assumed to be spatially constant
+## throughout all geometries</code></pre>
+<pre><code>## [1] &quot;Projecting raster...&quot;
+## [1] &quot;Evaluated buildings...&quot;
+## Simple feature collection with 101 features and 15 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 298406.5 ymin: 57773.81 xmax: 303995.9 ymax: 66987.43
+## epsg (SRID):    26918
+## proj4string:    +proj=lcc +lat_1=40.66666666666666 +lat_2=41.03333333333333 +lat_0=40.16666666666666 +lon_0=-74 +x_0=300000 +y_0=0 +datum=NAD83 +units=m +no_defs
+## First 10 features:
+##    OBJECTID     bin cnstrct_yr doitt_id feat_code groundelev heightroof
+## 1     25957 1086384       1900   265877      2100         17      40.44
+## 2     26499 1086429       1900   377418      2100         11      41.47
+## 3     27035 1086412       1900   100904      2100         26      35.22
+## 4     27153 1086380       1900   430277      2100         17      37.99
+## 5     27328 1086373       1900   380991      2100         21      34.14
+## 6     28309 1086347       1900   389890      2100         11      28.60
+## 7     29525 1086316       1900   784226      2100         12      28.24
+## 8     30080 1086321       1900   492384      2100          9      14.73
+## 9     31388 1005003       1900   313119      2100         21      61.28
+## 10    31389 1081935       1935   675546      2100         15      17.93
+##    date_lstmo   time_lstmo  lststatype name Tot_height Shape_Leng
+## 1  2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      57.44   87.96733
+## 2  2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      52.47   82.03547
+## 3  2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      61.22   82.85083
+## 4  2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      54.99   73.81723
+## 5  2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      55.14   79.30354
+## 6  2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      39.60   91.92517
+## 7  2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      40.24  105.18830
+## 8  2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      23.73   71.77158
+## 9  2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      82.28   66.38468
+## 10 2009-02-14 00:00:00.000 Constructed &lt;NA&gt;      32.93   44.05195
+##    Shape_Area                       geometry indicator
+## 1    324.4118 POLYGON ((298865.2 58078.38...      TRUE
+## 2    331.5904 POLYGON ((298456.2 58429.11...      TRUE
+## 3    332.3584 POLYGON ((298852.7 58260.72...      TRUE
+## 4    274.2415 POLYGON ((298811.6 57978.92...      TRUE
+## 5    251.6102 POLYGON ((298767.7 58022.78...      TRUE
+## 6    326.0774 POLYGON ((298610.6 57905.5,...      TRUE
+## 7    495.2046 POLYGON ((298448.6 57786.94...      TRUE
+## 8    229.9352 POLYGON ((298526.6 57802.31...      TRUE
+## 9    138.9534 POLYGON ((301401.7 61802.34...      TRUE
+## 10   117.1813 POLYGON ((301677.8 61382.65...      TRUE
+## [1] &quot;Saved...&quot;
+## Simple feature collection with 31 features and 15 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 299928.1 ymin: 61859.54 xmax: 303394.7 ymax: 66987.43
+## epsg (SRID):    26918
+## proj4string:    +proj=lcc +lat_1=40.66666666666666 +lat_2=41.03333333333333 +lat_0=40.16666666666666 +lon_0=-74 +x_0=300000 +y_0=0 +datum=NAD83 +units=m +no_defs
+## First 10 features:
+##    OBJECTID     bin cnstrct_yr doitt_id feat_code groundelev heightroof
+## 11    31423 1026874       1901   554919      2100         60      61.71
+## 16    31428 1010518       1920    63711      2100         21      13.69
+## 20    31436 1041281       1900     1143      2100         80      58.67
+## 24    31441 1005971       1900   765705      2100         22      54.35
+## 28    31445 1014800       1909   521010      2100         31     143.25
+## 29    31480 1018891       1901   537365      2100         60      54.35
+## 30    31481 1080787       1925   272488      5110         41      12.62
+## 31    31482 1035342       1917   208189      2100         73     279.96
+## 39    31497 1042487       1924    70544      2100         78     130.46
+## 41    31499 1038558       1900   312690      2100         34      49.13
+##    date_lstmo   time_lstmo  lststatype name Tot_height Shape_Leng
+## 11 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     121.71   70.91857
+## 16 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      34.69   88.18916
+## 20 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     138.67   57.70292
+## 24 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      76.35   48.15253
+## 28 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     174.25   78.53472
+## 29 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     114.35   54.70001
+## 30 2017-08-17 00:00:00.000 Constructed &lt;NA&gt;      53.62   27.21172
+## 31 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     352.96  102.71145
+## 39 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     208.46   97.87915
+## 41 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      83.13   72.99374
+##    Shape_Area                       geometry indicator
+## 11  177.75210 POLYGON ((300993.7 66867.1,...     FALSE
+## 16  414.66038 POLYGON ((300033.8 63102.54...     FALSE
+## 20  181.94366 POLYGON ((302779.1 66970.79...     FALSE
+## 24  124.97572 POLYGON ((301409.5 62527.14...     FALSE
+## 28  331.13704 POLYGON ((300474.7 63975.76...     FALSE
+## 29   92.93350 POLYGON ((301706.3 64515.28...     FALSE
+## 30   28.91756 POLYGON ((301417.7 64275.26...     FALSE
+## 31  645.83823 POLYGON ((301645.4 65128.12...     FALSE
+## 39  539.85438 POLYGON ((303110.5 66831.24...     FALSE
+## 41  188.38195 POLYGON ((302752.5 65583.99...     FALSE
+## [1] &quot;Processing statistics of noise per building...&quot;
+## Simple feature collection with 31 features and 15 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 299928.1 ymin: 61859.54 xmax: 303394.7 ymax: 66987.43
+## epsg (SRID):    26918
+## proj4string:    +proj=lcc +lat_1=40.66666666666666 +lat_2=41.03333333333333 +lat_0=40.16666666666666 +lon_0=-74 +x_0=300000 +y_0=0 +datum=NAD83 +units=m +no_defs
+## First 10 features:
+##    OBJECTID     bin cnstrct_yr doitt_id feat_code groundelev heightroof
+## 11    31423 1026874       1901   554919      2100         60      61.71
+## 16    31428 1010518       1920    63711      2100         21      13.69
+## 20    31436 1041281       1900     1143      2100         80      58.67
+## 24    31441 1005971       1900   765705      2100         22      54.35
+## 28    31445 1014800       1909   521010      2100         31     143.25
+## 29    31480 1018891       1901   537365      2100         60      54.35
+## 30    31481 1080787       1925   272488      5110         41      12.62
+## 31    31482 1035342       1917   208189      2100         73     279.96
+## 39    31497 1042487       1924    70544      2100         78     130.46
+## 41    31499 1038558       1900   312690      2100         34      49.13
+##    date_lstmo   time_lstmo  lststatype name Tot_height Shape_Leng
+## 11 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     121.71   70.91857
+## 16 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      34.69   88.18916
+## 20 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     138.67   57.70292
+## 24 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      76.35   48.15253
+## 28 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     174.25   78.53472
+## 29 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     114.35   54.70001
+## 30 2017-08-17 00:00:00.000 Constructed &lt;NA&gt;      53.62   27.21172
+## 31 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     352.96  102.71145
+## 39 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     208.46   97.87915
+## 41 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      83.13   72.99374
+##    Shape_Area                       geometry indicator
+## 11  177.75210 POLYGON ((300993.7 66867.1,...     FALSE
+## 16  414.66038 POLYGON ((300033.8 63102.54...     FALSE
+## 20  181.94366 POLYGON ((302779.1 66970.79...     FALSE
+## 24  124.97572 POLYGON ((301409.5 62527.14...     FALSE
+## 28  331.13704 POLYGON ((300474.7 63975.76...     FALSE
+## 29   92.93350 POLYGON ((301706.3 64515.28...     FALSE
+## 30   28.91756 POLYGON ((301417.7 64275.26...     FALSE
+## 31  645.83823 POLYGON ((301645.4 65128.12...     FALSE
+## 39  539.85438 POLYGON ((303110.5 66831.24...     FALSE
+## 41  188.38195 POLYGON ((302752.5 65583.99...     FALSE
+## [1] &quot;Verifying...&quot;
+## [1] TRUE
+## [1] &quot;Verifying...&quot;
+## [1] TRUE
+##        Min.  1st Qu.   Median     Mean  3rd Qu.     Max. Objectid
+## 1  54.08449 54.97014 55.85579 55.85579 56.74144 57.62709    31423
+## 2  51.73125 51.96820 52.20515 52.20515 52.44210 52.67905    31428
+## 3  43.99347 43.99347 43.99347 43.99347 43.99347 43.99347    31436
+## 4  55.29412 55.29412 55.29412 55.29412 55.29412 55.29412    31441
+## 5  47.90078 48.30153 48.70229 48.75891 49.18798 49.67368    31445
+## 6  50.64679 51.11274 51.57868 51.57868 52.04462 52.51056    31480
+## 7  50.25353 50.25353 50.25353 50.25353 50.25353 50.25353    31481
+## 8  53.31506 53.31506 53.31506 53.31506 53.31506 53.31506    31482
+## 9  49.75003 49.75003 49.75003 49.75003 49.75003 49.75003    31497
+## 10 51.51172 51.90397 52.29621 52.29621 52.68846 53.08070    31499
+## 11 56.50173 56.50173 56.50173 56.50173 56.50173 56.50173    31500
+## 12 52.61346 52.61346 52.61346 52.61346 52.61346 52.61346    31501
+## 13 55.63940 55.63940 55.63940 55.63940 55.63940 55.63940    31502
+## 14 56.98857 57.49830 58.00803 58.00803 58.51775 59.02748    31522
+## 15 52.27498 52.49528 52.71558 53.29894 53.81092 54.90626    31529
+## 16 57.48057 57.55383 57.62709 58.24939 58.63380 59.64050    31761
+## 17 45.10521 45.53938 45.97355 45.97355 46.40773 46.84190    31765
+## 18 52.03868 52.03868 52.03868 52.03868 52.03868 52.03868    31778
+## 19 55.28334 55.28334 55.28334 55.28334 55.28334 55.28334    31793
+## 20 51.37742 51.37742 51.37742 51.37742 51.37742 51.37742    31802
+## 21 55.44112 55.44112 55.44112 55.44112 55.44112 55.44112    31805
+## 22 59.61290 59.63444 59.65598 59.65598 59.67751 59.69905    31806
+## 23 52.37280 52.63862 52.90444 52.92024 53.19396 53.48348    31811
+## 24 60.80557 60.80557 60.80557 60.80557 60.80557 60.80557    31812
+## 25 47.00000 47.62574 48.25149 48.25149 48.87723 49.50298    31851
+## 26 52.80424 52.80424 52.80424 52.80424 52.80424 52.80424    31857
+## 27 51.61403 52.46262 53.31121 53.31121 54.15981 55.00840    31864
+## 28 52.11746 53.77763 54.49055 54.04365 54.75657 55.07605    31867
+## 29 43.48111 45.20172 46.92233 46.92233 48.64293 50.36354    31892
+## 30 49.50543 49.50543 49.50543 49.50543 49.50543 49.50543    31913
+## 31 51.41910 53.78978 56.16047 54.85543 56.57360 56.98672    31921</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">new_statis</code></pre></div>
+<pre><code>##        Min.  1st Qu.   Median     Mean  3rd Qu.     Max. Objectid
+## 1  54.08449 54.97014 55.85579 55.85579 56.74144 57.62709    31423
+## 2  51.73125 51.96820 52.20515 52.20515 52.44210 52.67905    31428
+## 3  43.99347 43.99347 43.99347 43.99347 43.99347 43.99347    31436
+## 4  55.29412 55.29412 55.29412 55.29412 55.29412 55.29412    31441
+## 5  47.90078 48.30153 48.70229 48.75891 49.18798 49.67368    31445
+## 6  50.64679 51.11274 51.57868 51.57868 52.04462 52.51056    31480
+## 7  50.25353 50.25353 50.25353 50.25353 50.25353 50.25353    31481
+## 8  53.31506 53.31506 53.31506 53.31506 53.31506 53.31506    31482
+## 9  49.75003 49.75003 49.75003 49.75003 49.75003 49.75003    31497
+## 10 51.51172 51.90397 52.29621 52.29621 52.68846 53.08070    31499
+## 11 56.50173 56.50173 56.50173 56.50173 56.50173 56.50173    31500
+## 12 52.61346 52.61346 52.61346 52.61346 52.61346 52.61346    31501
+## 13 55.63940 55.63940 55.63940 55.63940 55.63940 55.63940    31502
+## 14 56.98857 57.49830 58.00803 58.00803 58.51775 59.02748    31522
+## 15 52.27498 52.49528 52.71558 53.29894 53.81092 54.90626    31529
+## 16 57.48057 57.55383 57.62709 58.24939 58.63380 59.64050    31761
+## 17 45.10521 45.53938 45.97355 45.97355 46.40773 46.84190    31765
+## 18 52.03868 52.03868 52.03868 52.03868 52.03868 52.03868    31778
+## 19 55.28334 55.28334 55.28334 55.28334 55.28334 55.28334    31793
+## 20 51.37742 51.37742 51.37742 51.37742 51.37742 51.37742    31802
+## 21 55.44112 55.44112 55.44112 55.44112 55.44112 55.44112    31805
+## 22 59.61290 59.63444 59.65598 59.65598 59.67751 59.69905    31806
+## 23 52.37280 52.63862 52.90444 52.92024 53.19396 53.48348    31811
+## 24 60.80557 60.80557 60.80557 60.80557 60.80557 60.80557    31812
+## 25 47.00000 47.62574 48.25149 48.25149 48.87723 49.50298    31851
+## 26 52.80424 52.80424 52.80424 52.80424 52.80424 52.80424    31857
+## 27 51.61403 52.46262 53.31121 53.31121 54.15981 55.00840    31864
+## 28 52.11746 53.77763 54.49055 54.04365 54.75657 55.07605    31867
+## 29 43.48111 45.20172 46.92233 46.92233 48.64293 50.36354    31892
+## 30 49.50543 49.50543 49.50543 49.50543 49.50543 49.50543    31913
+## 31 51.41910 53.78978 56.16047 54.85543 56.57360 56.98672    31921</code></pre>
+</div>
+<div id="calculating-the-3d-cloud-point-statistics-per-each-potential-rooftop" class="section level2">
+<h2>Calculating the 3d cloud point statistics per each potential rooftop</h2>
+<p>This second approach of the package, aims to provide the user with different options to visualize the shape of the roofs when analyzing the heights given by the Lidar points. In addition, to know the behavior of the statistical and spatial distribution of the heights on each roof. To do this, first of all the package offers a function to crop Lidar files taking into account the edges of the print rooftops. Additionally, the function saves these clippings in a temporary folder or in a folder selected by the user. Consequently, after having a folder with these clippings there are several functions that allow to visualize histograms, boxplots and grid metrics to visualize the homogeneity of the heights.</p>
+<p>The following are the plots of each of the three functions that will allow us to have better tools to define the potential roofs.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(RooftopsHubsAnalyisisLidar)
+
+path_las &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/new_lidar.las&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RooftopsHubsAnalyisisLidar&quot;</span>)
+sample_rooftops_print &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/sample_roofs.shp&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RooftopsHubsAnalyisisLidar&quot;</span>)
+
+list_las_elements &lt;-<span class="st"> </span><span class="kw">clipping_lidar_buildings_opPlot</span>(path_las, sample_rooftops_print)</code></pre></div>
+<pre><code>## Reading layer `sample_roofs' from data source `C:\tmp\Rtmp42tSdU\temp_libpath28e864bb7ea2\RooftopsHubsAnalyisisLidar\extdata\sample_roofs.shp' using driver `ESRI Shapefile'
+## Simple feature collection with 2 features and 14 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 583601.6 ymin: 4508031 xmax: 583708.4 ymax: 4508073
+## epsg (SRID):    26918
+## proj4string:    +proj=utm +zone=18 +datum=NAD83 +units=m +no_defs
+## [1] &quot;Verifying...&quot;
+## [1] 26918
+## [1] 32767
+## class        : LAS (LASF v1.2)
+## point format : 1
+## memory       : 17.9 Mb 
+## extent       :583576.7, 583735, 4507950, 4508138 (xmin, xmax, ymin, ymax)
+## coord. ref.  : NA 
+## area         : 29816.84 units²
+## points       : 234.1 thoushand points
+## density      : 7.85 points/units²
+## names        : X Y Z gpstime Intensity ReturnNumber NumberOfReturns ScanDirectionFlag EdgeOfFlightline Classification Synthetic_flag Keypoint_flag Withheld_flag ScanAngleRank UserData PointSourceID 
+## [1] &quot;The sources have different epsg&quot;
+## [1] &quot;Las file projected...&quot;
+## [1] 26918
+## [1] 26918
+## [1] &quot;before clip&quot;
+## class        : LAS (LASF v1.2)
+## point format : 1
+## memory       : 17.9 Mb 
+## extent       :583576.7, 583735, 4507950, 4508138 (xmin, xmax, ymin, ymax)
+## coord. ref.  : +proj=utm +zone=18 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0 
+## area         : 29816.84 m²
+## points       : 234.1 thoushand points
+## density      : 7.85 points/m²
+## names        : X Y Z gpstime Intensity ReturnNumber NumberOfReturns ScanDirectionFlag EdgeOfFlightline Classification Synthetic_flag Keypoint_flag Withheld_flag ScanAngleRank UserData PointSourceID 
+## [1] &quot;Working in the building with the id:35054&quot;
+## [1] &quot;Subset&quot;
+## Simple feature collection with 1 feature and 14 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 583674.9 ymin: 4508031 xmax: 583708.4 ymax: 4508065
+## epsg (SRID):    26918
+## proj4string:    +proj=utm +zone=18 +datum=NAD83 +units=m +no_defs
+##   OBJECTID     bin cnstrct_yr doitt_id feat_code groundelev heightroof
+## 1    35054 1075728       1930   626574      2100         16     224.48
+##   date_lstmo   time_lstmo  lststatype name Tot_height Shape_Leng
+## 1 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;     240.48   122.1471
+##   Shape_Area                       geometry
+## 1   932.3589 POLYGON ((583704.9 4508031,...
+## class        : LAS (LASF v1.2)
+## point format : 1
+## memory       : 17.9 Mb 
+## extent       :583576.7, 583735, 4507950, 4508138 (xmin, xmax, ymin, ymax)
+## coord. ref.  : +proj=utm +zone=18 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0 
+## area         : 29816.84 m²
+## points       : 234.1 thoushand points
+## density      : 7.85 points/m²
+## names        : X Y Z gpstime Intensity ReturnNumber NumberOfReturns ScanDirectionFlag EdgeOfFlightline Classification Synthetic_flag Keypoint_flag Withheld_flag ScanAngleRank UserData PointSourceID 
+## [1] &quot;Subset_las&quot;
+## class        : LAS (LASF v1.2)
+## point format : 1
+## memory       : 583.8 Kb 
+## extent       :583675, 583708.2, 4508031, 4508065 (xmin, xmax, ymin, ymax)
+## coord. ref.  : +proj=utm +zone=18 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0 
+## area         : 929.8823 m²
+## points       : 7 thoushand points
+## density      : 7.49 points/m²
+## names        : X Y Z gpstime Intensity ReturnNumber NumberOfReturns ScanDirectionFlag EdgeOfFlightline Classification Synthetic_flag Keypoint_flag Withheld_flag ScanAngleRank UserData PointSourceID 
+## [1] &quot;Saving in the temporal folder by default...&quot;
+## [1] &quot;Saved&quot;
+## [1] &quot;Generating the plots...&quot;
+## [1] &quot;Working in the building with the id:462163&quot;
+## [1] &quot;Subset&quot;
+## Simple feature collection with 1 feature and 14 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 583601.6 ymin: 4508064 xmax: 583621.5 ymax: 4508073
+## epsg (SRID):    26918
+## proj4string:    +proj=utm +zone=18 +datum=NAD83 +units=m +no_defs
+##   OBJECTID     bin cnstrct_yr doitt_id feat_code groundelev heightroof
+## 2   462163 1002072       1920   689789      2100         17      61.64
+##   date_lstmo   time_lstmo  lststatype name Tot_height Shape_Leng
+## 2 2017-08-22 00:00:00.000 Constructed &lt;NA&gt;      78.64   53.72407
+##   Shape_Area                       geometry
+## 2   147.0827 POLYGON ((583621.5 4508071,...
+## class        : LAS (LASF v1.2)
+## point format : 1
+## memory       : 17.9 Mb 
+## extent       :583576.7, 583735, 4507950, 4508138 (xmin, xmax, ymin, ymax)
+## coord. ref.  : +proj=utm +zone=18 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0 
+## area         : 29816.84 m²
+## points       : 234.1 thoushand points
+## density      : 7.85 points/m²
+## names        : X Y Z gpstime Intensity ReturnNumber NumberOfReturns ScanDirectionFlag EdgeOfFlightline Classification Synthetic_flag Keypoint_flag Withheld_flag ScanAngleRank UserData PointSourceID 
+## [1] &quot;Subset_las&quot;
+## class        : LAS (LASF v1.2)
+## point format : 1
+## memory       : 173 Kb 
+## extent       :583601.6, 583621.5, 4508064, 4508073 (xmin, xmax, ymin, ymax)
+## coord. ref.  : +proj=utm +zone=18 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0 
+## area         : 144.311 m²
+## points       : 1.7 thoushand points
+## density      : 11.81 points/m²
+## names        : X Y Z gpstime Intensity ReturnNumber NumberOfReturns ScanDirectionFlag EdgeOfFlightline Classification Synthetic_flag Keypoint_flag Withheld_flag ScanAngleRank UserData PointSourceID 
+## [1] &quot;Saving in the temporal folder by default...&quot;
+## [1] &quot;Saved&quot;
+## [1] &quot;Generating the plots...&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Because the plots are being generated using the lidR library, they will appear as pop-up windows </span></code></pre></div>
+</div>
+<div id="calculating-the-3d-cloud-point-statistics-per-each-potential-rooftop-1" class="section level2">
+<h2>Calculating the 3d cloud point statistics per each potential rooftop</h2>
+<p>This second approach of the package, aims to provide the user with different options to visualize the shape of the roofs when analyzing the heights given by the Lidar points. In addition, to know the behavior of the statistical and spatial distribution of the heights on each roof. To do this, first of all the package offers a function to crop Lidar files taking into account the edges of the print rooftops. Additionally, the function saves these clippings in a temporary folder or in a folder selected by the user. Consequently, after having a folder with these clippings there are several functions that allow to visualize histograms, boxplots and grid metrics to visualize the homogeneity of the heights.</p>
+<p>The Boxplot diagrams below show that the roofs of buildings 10, 12 and 17 show a distribution that could cover a small range of elevations. While the roofs of buildings 2 5 and 7 show a distribution with a wider range of elevations. This means that what has a low distribution range could have a flatter surface and suitable for the development of the hubs.</p>
+<pre><code>## Registered S3 methods overwritten by 'ggplot2':
+##   method         from 
+##   [.quosures     rlang
+##   c.quosures     rlang
+##   print.quosures rlang</code></pre>
+<pre><code>##  [1] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_1069711.las&quot;
+##  [2] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_193281.las&quot; 
+##  [3] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_251655.las&quot; 
+##  [4] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_313681.las&quot; 
+##  [5] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_31852.las&quot;  
+##  [6] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_350147.las&quot; 
+##  [7] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_35054.las&quot;  
+##  [8] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_420971.las&quot; 
+##  [9] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_446252.las&quot; 
+## [10] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_454393.las&quot; 
+## [11] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_462163.las&quot; 
+## [12] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_513620.las&quot; 
+## [13] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_604531.las&quot; 
+## [14] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_610649.las&quot; 
+## [15] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_700485.las&quot; 
+## [16] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_743565.las&quot; 
+## [17] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_777476.las&quot; 
+## [18] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_830516.las&quot; 
+## [19] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_835792.las&quot; 
+## [20] &quot;C:/tmp/Rtmp42tSdU/temp_libpath28e864bb7ea2/RooftopsHubsAnalyisisLidar/extdata/sample_las/las_983407.las&quot;</code></pre>
+<pre><code>##    boxp_id   name_file
+## 2        1 las_1069711
+## 3        2  las_193281
+## 4        3  las_251655
+## 5        4  las_313681
+## 6        5   las_31852
+## 7        6  las_350147
+## 8        7   las_35054
+## 9        8  las_420971
+## 10       9  las_446252
+## 11      10  las_454393
+## 12      11  las_462163
+## 13      12  las_513620
+## 14      13  las_604531
+## 15      14  las_610649
+## 16      15  las_700485
+## 17      16  las_743565
+## 18      17  las_777476
+## 19      18  las_830516
+## 20      19  las_835792
+## 21      20  las_983407</code></pre>
+<pre><code>## Warning: Removed 12170 rows containing non-finite values (stat_boxplot).</code></pre>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>A very similar situation can be reflected in the histograms of the elevations.</p>
+<pre><code>##    boxp_id   name_file
+## 2        1 las_1069711
+## 3        2  las_193281
+## 4        3  las_251655
+## 5        4  las_313681
+## 6        5   las_31852
+## 7        6  las_350147
+## 8        7   las_35054
+## 9        8  las_420971
+## 10       9  las_446252
+## 11      10  las_454393
+## 12      11  las_462163
+## 13      12  las_513620
+## 14      13  las_604531
+## 15      14  las_610649
+## 16      15  las_700485
+## 17      16  las_743565
+## 18      17  las_777476
+## 19      18  las_830516
+## 20      19  las_835792
+## 21      20  las_983407</code></pre>
+<pre><code>## Warning: Removed 12170 rows containing non-finite values (stat_bin).</code></pre>
+<pre><code>## Warning: Removed 14 rows containing missing values (geom_bar).</code></pre>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>Finally, the grid statistics are shown below, in this case evaluated through the average and with a default cell size of 5 square meters. In this case we can confirm the previous statement where buildings 10, 12 and 17 have a roof with characteristics of being mostly flat.</p>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+</div>
+<div id="results-and-discussion" class="section level2">
+<h2>Results and discussion</h2>
+<p>As we could see, the function related to the first approach allows the user to have in great detail the noise levels for each building that is in the available area. The results given by the functions of the second approach yield the following characteristics. Boxplots help verify if there is a large or smaller distribution of heights for each building. Similarly also histograms. On the other hand, grila metrics are very important in the sense that they allow the user to visually know the homogeneity of the roof with the naked eye.</p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p>*Civil Aviation Authority (2014). Managing Aviation Noise (No. CAP 1165). London. Retrieved from <a href="https://publicapps.caa.co.uk/modalapplication.aspx?appid=11&amp;mode=detail&amp;id=6251" class="uri">https://publicapps.caa.co.uk/modalapplication.aspx?appid=11&amp;mode=detail&amp;id=6251</a></p>
+<p>Hildemann, M., &amp; Delgado, C. (Eds.) 2019. An adaptable and scalable least cost network for air-taxis in urban areas Study area: Manhattan, New York. Accepted Short Papers and Posters: AGILE. Retrieved from <a href="https://agile-online.org/images/conference_2019/documents/short_papers/40_Upload_your_PDF_file.pdf" class="uri">https://agile-online.org/images/conference_2019/documents/short_papers/40_Upload_your_PDF_file.pdf</a></p>
+<p>Hurtley, C. (2009). Night noise guidelines for Europe. Copenhagen: World Health Organization Europe. Retrieved from <a href="http://www.euro.who.int/%5F%5Fdata/assets/pdf%5Ffile/0017/43316/E92845.pdf">http://www.euro.who.int/%5F%5Fdata/assets/pdf%5Ffile/0017/43316/E92845.pdf</a> Sean Captain (2017, April 24). Uber’s Flying Car Chief On Noise Pollution And The Future Of Sky Taxis. Fast Company. Retrieved from <a href="https://www.fastcompany.com/40411391/inside-ubers-ambitious-project-to-fill-the-sky-with-flying-taxis" class="uri">https://www.fastcompany.com/40411391/inside-ubers-ambitious-project-to-fill-the-sky-with-flying-taxis</a></p>
+<p>Sustainable Aviation (2019). Sustainable Aviation Noise Road-Map. Retrieved from <a href="https://www.sustainableaviation.co.uk/wp-content/uploads/2018/06/SA-Noise-Road-Map-Report.pdf" class="uri">https://www.sustainableaviation.co.uk/wp-content/uploads/2018/06/SA-Noise-Road-Map-Report.pdf</a></p>
+<p>Office of noise abatement and control 12, U.S. Environmental Protection Agency 1974.</p>
+<p>Uber Elevate (2016). Fast-Forwarding to a Future of On-Demand Urban Air Transportation: White paper. Retrieved from Uber website: <a href="https://www.uber.com/us/en/elevate/" class="uri">https://www.uber.com/us/en/elevate/</a></p>
+<p>Bureau of Statistics (2014). Comma Seperated Value BTS 15-17. World Health Organization, G. (1999). Guidelines for Community Noise. Retrieved from <a href="https://www.nh.gov/osi/energy/programs/documents/sb99-who-guidelines-community-noise.pdf*" class="uri">https://www.nh.gov/osi/energy/programs/documents/sb99-who-guidelines-community-noise.pdf*</a></p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
