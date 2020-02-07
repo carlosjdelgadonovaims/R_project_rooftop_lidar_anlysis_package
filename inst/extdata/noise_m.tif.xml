@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="es"><Esri><CreaDate>20190807</CreaDate><CreaTime>20042200</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="c:\program files (x86)\arcgis\desktop10.6\ArcToolbox\Toolboxes\Spatial Analyst Tools.tbx\ExtractByMask" Date="20190807" Time="200422">ExtractByMask noise_m boundaries_manhattan D:\Geotech_Classes\Second_Semester\R_Data_Science\Final_Project_R\Tests\noise_m.tif</Process></lineage></DataProperties></Esri></metadata>
